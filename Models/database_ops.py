@@ -1,12 +1,11 @@
-# database_ops.py
 import sqlite3
 
-# function to get connection to the database
 def get_connection():
     conn = sqlite3.connect('TODO_TABLE.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     return conn
 
-# <<<<<<<<<< Users >>>>>>>>>>>>>
+# Users
 def read_users():
     conn = get_connection()
     crsor = conn.execute("SELECT * FROM Users;")
@@ -39,7 +38,7 @@ def delete_user(id_user):
     conn.commit()
     conn.close()
 
-# <<<<<<<<<< userDetails >>>>>>>>>>>>>
+# userDetails
 def read_user_details():
     conn = get_connection()
     crsor = conn.execute("SELECT * FROM userDetails;")
@@ -76,18 +75,18 @@ def create_user_details(id_user, phone_number, address, preference):
 
 def update_user_details(id_user_details, phone_number, address, preference):
     conn = get_connection()
-    conn.execute('UPDATE userDetails SET phone_number=?, address=?, preference=? WHERE id_userDetails=?;',
+    conn.execute('UPDATE userDetails SET phone_number=?, address=?, preference=? WHERE id_user_details=?;',
                  (phone_number, address, preference, id_user_details))
     conn.commit()
     conn.close()
 
 def delete_user_details(id_user_details):
     conn = get_connection()
-    conn.execute('DELETE FROM userDetails WHERE id_userDetails=?;', (id_user_details,))
+    conn.execute('DELETE FROM userDetails WHERE id_user_details=?;', (id_user_details,))
     conn.commit()
     conn.close()
 
-# <<<<<<<<<< Tasks >>>>>>>>>>>>>
+# Tasks
 def read_tasks():
     conn = get_connection()
     crsor = conn.execute("SELECT * FROM Tasks;")
@@ -128,7 +127,7 @@ def mark_task_complete(id_task):
     conn.commit()
     conn.close()
 
-# <<<<<<<<<< Tags >>>>>>>>>>>>>
+# Tags
 def read_tags():
     conn = get_connection()
     crsor = conn.execute("SELECT * FROM Tags;")
@@ -161,7 +160,7 @@ def delete_tag(id_tag):
     conn.commit()
     conn.close()
 
-# <<<<<<<<<< task_tag >>>>>>>>>>>>>
+# task_tag
 def read_task_tags():
     conn = get_connection()
     crsor = conn.execute("SELECT * FROM task_tag;")
@@ -182,9 +181,9 @@ def create_task_tag(id_task, id_tag):
     conn.commit()
     conn.close()
 
-def update_task_tag(id_task, id_tag):
+def update_task_tag(id_task, old_id_tag, new_id_tag):
     conn = get_connection()
-    conn.execute('UPDATE task_tag SET id_tag=? WHERE id_task=?;', (id_tag, id_task))
+    conn.execute('UPDATE task_tag SET id_tag=? WHERE id_task=? AND id_tag=?;', (new_id_tag, id_task, old_id_tag))
     conn.commit()
     conn.close()
 
@@ -194,7 +193,7 @@ def delete_task_tag(id_task, id_tag):
     conn.commit()
     conn.close()
 
-# <<<<<<<<<< Extra Reads >>>>>>>>>>>>>
+# Extra Reads
 def list_tags_for_task(id_task):
     conn = get_connection()
     crsor = conn.execute("""
@@ -212,10 +211,9 @@ def list_tasks_for_tag(id_tag):
     crsor = conn.execute("""
         SELECT T.description
         FROM Tasks T
-        JOIN task_tag TT ON T.id_task = TT.id_task
+        JOIN task_tag TT ON T.id_tag = TT.id_tag
         WHERE TT.id_tag = ?;
     """, (id_tag,))
     tasks = crsor.fetchall()
     conn.close()
     return tasks
-

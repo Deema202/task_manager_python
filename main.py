@@ -1,10 +1,8 @@
- #<<<<<<<<<<<<<<<<<<<<<<<<<< main file <<<<<<<<<<<<<<<<<<<<<<<<<<<<
-from Models import database_ops
+import database_ops
 from art import text2art
 from termcolor import colored
 import inquirer
 from prettytable import PrettyTable
-
 
 def main():
     assci_manner = text2art('TODO TABLE')
@@ -14,14 +12,12 @@ def main():
     print(' Please choose what you want to do : ')
 
     actions = [
-        # Creating
         'create user',
         'create user details',
         'create task',
         'create tag',
         'create task tag',
 
-        # Reading
         'fetch all users',
         'fetch one user',
         'fetch all user details',
@@ -34,24 +30,20 @@ def main():
         'list tags for task',
         'list tasks for tag',
 
-        # Updating
         'update user',
         'update user details',
         'update task',
         'update tag',
         'update task tag',
 
-        # special
-        'mark task complete'
+        'mark task complete',
 
-        # Deleting
         'delete user',
         'delete user details',
         'delete task',
         'delete tag',
         'delete task tag',
 
-        # Exit
         'exit'
     ]
 
@@ -66,12 +58,10 @@ def main():
 
         choice = action['action'].lower()
 
-        # exit
         if choice == 'exit':
             print(" Thank you for using the application , Goodbye ! ")
             break
 
-        # create
         elif choice == 'create user':
             name = input(' Enter name : ')
             email = input(' Enter email : ')
@@ -105,7 +95,6 @@ def main():
             database_ops.create_task_tag(id_task, id_tag)
             print(' TaskTag created successfully ')
 
-        # reading
         elif choice == 'fetch all users':
             users = database_ops.read_users()
             table = PrettyTable(['ID', 'Name', 'Email'])
@@ -115,9 +104,12 @@ def main():
         elif choice == 'fetch one user':
             id_user = int(input(' Enter id_user : '))
             user = database_ops.read_user(id_user)
-            table = PrettyTable(['ID', 'Name', 'Email'])
-            table.add_row(user)
-            print(table)
+            if user:
+                table = PrettyTable(['ID', 'Name', 'Email'])
+                table.add_row(user)
+                print(table)
+            else:
+                print("Record not found.")
 
         elif choice == 'fetch all user details':
             user_details = database_ops.read_user_details()
@@ -128,9 +120,12 @@ def main():
         elif choice == 'fetch one user details':
             id_user_details = int(input(' Enter id_userDetails : '))
             user_details = database_ops.read_user_detail(id_user_details)
-            table = PrettyTable(['ID', 'ID_user', 'phone_number', 'address', 'preference'])
-            table.add_row(user_details)
-            print(table)
+            if user_details:
+                table = PrettyTable(['ID', 'ID_user', 'phone_number', 'address', 'preference'])
+                table.add_row(user_details)
+                print(table)
+            else:
+                print("Record not found.")
 
         elif choice == 'fetch all tasks':
             tasks = database_ops.read_tasks()
@@ -141,9 +136,12 @@ def main():
         elif choice == 'fetch one task':
             id_task = int(input(' Enter id_task : '))
             task = database_ops.read_task(id_task)
-            table = PrettyTable(['ID', 'ID_user', 'description', 'status', 'due_date'])
-            table.add_row(task)
-            print(table)
+            if task:
+                table = PrettyTable(['ID', 'ID_user', 'description', 'status', 'due_date'])
+                table.add_row(task)
+                print(table)
+            else:
+                print("Record not found.")
 
         elif choice == 'fetch all tags':
             tags = database_ops.read_tags()
@@ -154,16 +152,22 @@ def main():
         elif choice == 'fetch one tag':
             id_tag = int(input(' Enter id_tag : '))
             tag = database_ops.read_tag(id_tag)
-            table = PrettyTable(['ID', 'name'])
-            table.add_row(tag)
-            print(table)
+            if tag:
+                table = PrettyTable(['ID', 'name'])
+                table.add_row(tag)
+                print(table)
+            else:
+                print("Record not found.")
 
         elif choice == 'view user details':
             id_user = int(input(' Enter id_user : '))
             user_details = database_ops.view_user_details(id_user)
-            table = PrettyTable(['ID', 'name', 'email', 'phone_number', 'address', 'preference'])
-            table.add_row(user_details)
-            print(table)
+            if user_details:
+                table = PrettyTable(['ID', 'name', 'email', 'phone_number', 'address', 'preference'])
+                table.add_row(user_details)
+                print(table)
+            else:
+                print("Record not found.")
 
         elif choice == 'list tags for task':
             id_task = int(input(' Enter id_task : '))
@@ -179,7 +183,6 @@ def main():
             table.add_rows(tasks)
             print(table)
 
-        # updating
         elif choice == 'update user':
             id_user = int(input(' Enter id_user : '))
             name = input(' Enter name : ')
@@ -211,17 +214,16 @@ def main():
 
         elif choice == 'update task tag':
             id_task = int(input(' Enter id_task : '))
-            id_tag = int(input(' Enter id_tag : '))
-            database_ops.update_task_tag(id_task, id_tag)
+            old_id_tag = int(input(' Enter old id_tag : '))
+            new_id_tag = int(input(' Enter new id_tag : '))
+            database_ops.update_task_tag(id_task, old_id_tag, new_id_tag)
             print(' TaskTag updated successfully ')
 
-         # mark task complete
         elif choice == 'mark task complete':
              id_task = int(input(' Enter id_task : '))
              database_ops.mark_task_complete(id_task)
-             print(' Task marked as complete ✅')
+             print(' Task marked as complete ')
 
-        # deleting
         elif choice == 'delete user':
             id_user = int(input(' Enter id_user : '))
             database_ops.delete_user(id_user)
@@ -247,7 +249,6 @@ def main():
             id_tag = int(input(' Enter id_tag : '))
             database_ops.delete_task_tag(id_task, id_tag)
             print(' TaskTag deleted successfully ')
-
 
 if __name__ == "__main__":
     main()

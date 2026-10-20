@@ -1,13 +1,9 @@
-# setup.py
-
 import sqlite3
 
-# Function to initialize the database
 def create_db():
     conn = sqlite3.connect('TODO_TABLE.db')
     conn.execute('PRAGMA foreign_keys = ON')
 
-    # Create Users table
     conn.execute("""
     CREATE TABLE IF NOT EXISTS Users (
         id_user INTEGER PRIMARY KEY,
@@ -16,7 +12,6 @@ def create_db():
     );
     """)
 
-    # Create userDetails table
     conn.execute("""
     CREATE TABLE IF NOT EXISTS userDetails (
         id_user_details INTEGER PRIMARY KEY,
@@ -28,7 +23,6 @@ def create_db():
     );
     """)
 
-    # Create Tasks table
     conn.execute("""
     CREATE TABLE IF NOT EXISTS Tasks (
         id_task INTEGER PRIMARY KEY,
@@ -40,7 +34,6 @@ def create_db():
     );
     """)
 
-    # Create Tags table
     conn.execute("""
     CREATE TABLE IF NOT EXISTS Tags (
         id_tag INTEGER PRIMARY KEY,
@@ -48,7 +41,6 @@ def create_db():
     );
     """)
 
-    # Create task_tag table
     conn.execute("""
     CREATE TABLE IF NOT EXISTS task_tag (
         id_task INTEGER,
@@ -62,7 +54,5 @@ def create_db():
     conn.commit()
     conn.close()
 
-
-# Run function to create DB
 if __name__ == '__main__':
     create_db()
