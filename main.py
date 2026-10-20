@@ -1,4 +1,4 @@
-import database_ops
+from Models import database_ops
 from art import text2art
 from termcolor import colored
 import inquirer
